@@ -28,7 +28,7 @@ public class EditorActivity extends AppCompatActivity {
     private EditText mPhoneEditText;
     private Spinner mQuantitySpinner;
 
-    private int mQuantity = InventoryContract.InventoryEntry.QUANTITY_SMALL;
+    private int mQuantity = InventoryEntry.QUANTITY_SMALL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

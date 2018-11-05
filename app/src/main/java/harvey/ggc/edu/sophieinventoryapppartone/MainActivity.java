@@ -4,11 +4,10 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,27 +19,24 @@ import harvey.ggc.edu.sophieinventoryapppartone.data.InventoryDbHelper;
 
 public class MainActivity extends AppCompatActivity {
 
-    private InventoryDbHelper mDbHelper;
+   // private InventoryDbHelper mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // Snackbar.make(view, "New ", Snackbar.LENGTH_LONG)
-                 //       .setAction("Action", null).show();
 
                 Intent intent = new Intent(MainActivity.this, EditorActivity.class);
-                        startActivity(intent);
+                startActivity(intent);
             }
         });
 
-        mDbHelper = new InventoryDbHelper(this);
+        //mDbHelper = new InventoryDbHelper(this);
     }
 
     @Override
@@ -51,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void displayDatabaseInfo() {
 
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        //SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         String[] projection = {
                 InventoryEntry._ID,
@@ -62,12 +58,10 @@ public class MainActivity extends AppCompatActivity {
                 InventoryEntry.COLUMN_INVENTORY_SUPPLIER_PHONE
         };
 
-        Cursor cursor = db.query(
-                InventoryContract.InventoryEntry.TABLE_NAME,
+        Cursor cursor = getContentResolver().query(
+                InventoryEntry.CONTENT_URI,
                 projection,
-                null,
-                null,
-                null,
+               null,
                 null,
                 null);
 
@@ -107,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void insertInventory() {
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        //SQLiteDatabase db = mDbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
 
         values.put(InventoryEntry.COLUMN_INVENTORY_PRODUCT_NAME, "iPAD");
@@ -116,30 +110,31 @@ public class MainActivity extends AppCompatActivity {
         values.put(InventoryEntry.COLUMN_INVENTORY_SUPPLIER_NAME, "Apple");
         values.put(InventoryEntry.COLUMN_INVENTORY_SUPPLIER_PHONE, "6784091111");
 
-        long newRowId = db.insert(InventoryEntry.TABLE_NAME, null, values);
+        Uri newUri = getContentResolver().insert(InventoryEntry.CONTENT_URI, values);
+       // long newRowId = db.insert(InventoryEntry.TABLE_NAME, null, values);
     }
 
-            @Override
-            public boolean onCreateOptionsMenu(Menu menu) {
-                // Inflate the menu; this adds items to the action bar if it is present.
-                getMenuInflater().inflate(R.menu.menu_main, menu);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        switch (item.getItemId()) {
+            case R.id.action_insert_d_data:
+                insertInventory();
+                displayDatabaseInfo();
+            case R.id.action_delete_entries:
+
                 return true;
-            }
-
-            @Override
-            public boolean onOptionsItemSelected(MenuItem item) {
-                // Handle action bar item clicks here. The action bar will
-                // automatically handle clicks on the Home/Up button, so long
-                // as you specify a parent activity in AndroidManifest.xml.
-                switch (item.getItemId()) {
-                    case R.id.action_insert_d_data:
-                        insertInventory();
-                        displayDatabaseInfo();
-                    case R.id.action_delete_entries:
-
-                        return true;
-                }
-
-                return super.onOptionsItemSelected(item);
-            }
         }
+
+        return super.onOptionsItemSelected(item);
+    }
+}

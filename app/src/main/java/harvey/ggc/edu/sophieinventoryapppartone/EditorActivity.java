@@ -2,6 +2,7 @@ package harvey.ggc.edu.sophieinventoryapppartone;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.IntegerRes;
 import android.support.v4.app.NavUtils;
@@ -83,8 +84,8 @@ public class EditorActivity extends AppCompatActivity {
 
         int price = Integer.parseInt(priceString);
 
-        InventoryDbHelper mDbHelper = new InventoryDbHelper(this);
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        //InventoryDbHelper mDbHelper = new InventoryDbHelper(this);
+        //SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(InventoryContract.InventoryEntry.COLUMN_INVENTORY_PRODUCT_NAME, nameString);
@@ -93,12 +94,13 @@ public class EditorActivity extends AppCompatActivity {
         values.put(InventoryContract.InventoryEntry.COLUMN_INVENTORY_PRICE, price);
         values.put(InventoryContract.InventoryEntry.COLUMN_INVENTORY_QUANTITY, mQuantity);
 
-        long newRowId = db.insert(InventoryContract.InventoryEntry.TABLE_NAME, null, values);
+        //long newRowId = db.insert(InventoryContract.InventoryEntry.TABLE_NAME, null, values);
+        Uri newUri = getContentResolver().insert(InventoryEntry.CONTENT_URI, values);
 
-        if (newRowId == -1) {
-            Toast.makeText(this, "Error with saving the inventory!", Toast.LENGTH_SHORT).show();
+        if (newUri == null) {
+            Toast.makeText(this, getString(R.string.editor_insert_inventory_fail), Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, "Inventory saved with row id: " + newRowId, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.editor_insert_inventory_success), Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -17,5 +17,6 @@
     <string name="action_deleted">Delete</string>
     <string name="editor_title_new_inventory">Add Inventory</string>
     <string name="editor_activity_title_new_product">Add inventory here</string>
-
+    <string name="editor_insert_inventory_fail">Inventory has not been added</string>
+    <string name="editor_insert_inventory_success">Inventory has been added successfully!</string>
 </resources>

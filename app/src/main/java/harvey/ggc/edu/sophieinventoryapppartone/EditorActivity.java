@@ -21,6 +21,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -38,9 +39,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private EditText mPriceEditText;
     private EditText mSupplierNameEditText;
     private EditText mPhoneEditText;
-    private Spinner mQuantitySpinner;
+    private EditText mQuantityEditText;
 
-    private int mQuantity = InventoryEntry.QUANTITY_SMALL;
+    //private int mQuantity = InventoryEntry.QUANTITY_SMALL;
+    String sNumber;
+    EditText numText;
     private boolean mInventoryHasChanged = false;
 
     private View.OnTouchListener mTouchListener = new View.OnTouchListener(){
@@ -61,7 +64,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         if(mCurrentInventoryUri == null) {
             setTitle("Add a product! ");
-
+            invalidateOptionsMenu();
         }
 else{
             setTitle(getString(R.string.editor_title_edit));
@@ -72,45 +75,13 @@ else{
         mPriceEditText = (EditText) findViewById(R.id.edit_product_price);
         mPhoneEditText = (EditText) findViewById(R.id.edit_phone);
         mSupplierNameEditText = (EditText) findViewById(R.id.edit_supplier);
-        mQuantitySpinner = (Spinner) findViewById(R.id.spinner_quantity);
+        mQuantityEditText= (EditText) findViewById(R.id.edit_quantity);
 
         mProductNameEditText.setOnTouchListener(mTouchListener);
         mPriceEditText.setOnTouchListener(mTouchListener);
         mPhoneEditText.setOnTouchListener(mTouchListener);
         mSupplierNameEditText.setOnTouchListener(mTouchListener);
-        mQuantitySpinner.setOnTouchListener(mTouchListener);
-
-        setupSpinner();
-    }
-
-    private void setupSpinner() {
-        ArrayAdapter quantitySpinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.array_quantity_options, android.R.layout.simple_spinner_dropdown_item);
-
-        quantitySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-
-        mQuantitySpinner.setAdapter(quantitySpinnerAdapter);
-
-        mQuantitySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selection = (String) parent.getItemAtPosition(position);
-                if (!TextUtils.isEmpty(selection)) {
-                    if (selection.equals(getString(R.string.quantity_large))) {
-                        mQuantity = InventoryEntry.QUANTITY_LARGE;
-                    } else if (selection.equals(getString(R.string.quantity_medium))) {
-                        mQuantity = InventoryEntry.QUANTITY_MEDIUM;
-                    } else {
-                        mQuantity = InventoryEntry.QUANTITY_SMALL;
-                    }
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                mQuantity = InventoryEntry.QUANTITY_SMALL;
-            }
-        });
+        mQuantityEditText.setOnTouchListener(mTouchListener);
 
     }
 
@@ -119,20 +90,24 @@ else{
         String priceString = mPriceEditText.getText().toString().trim();
         String supplierString = mSupplierNameEditText.getText().toString().trim();
         String phoneString = mPhoneEditText.getText().toString().trim();
+        String quantityString = mQuantityEditText.getText().toString().trim();
 
-        if (mCurrentInventoryUri == null &&
-                TextUtils.isEmpty(productString) && TextUtils.isEmpty(priceString) &&
-                TextUtils.isEmpty(phoneString) && TextUtils.isEmpty(supplierString)
-                && mQuantity == InventoryEntry.QUANTITY_SMALL) {
+      if(TextUtils.isEmpty(productString)
+          || TextUtils.isEmpty(priceString)
+                || TextUtils.isEmpty(supplierString)
+                || TextUtils.isEmpty(phoneString)
+                || TextUtils.isEmpty(phoneString))
+        {
+            Toast.makeText(this, getString(R.string.editor_insert_inventory_success),
+                    Toast.LENGTH_LONG).show();
             return;
         }
-
         ContentValues values = new ContentValues();
         values.put(InventoryContract.InventoryEntry.COLUMN_INVENTORY_PRODUCT_NAME, productString);
         values.put(InventoryContract.InventoryEntry.COLUMN_INVENTORY_SUPPLIER_PHONE, phoneString);
         values.put(InventoryContract.InventoryEntry.COLUMN_INVENTORY_SUPPLIER_NAME, supplierString);
         values.put(InventoryContract.InventoryEntry.COLUMN_INVENTORY_PRICE, priceString);
-        values.put(InventoryContract.InventoryEntry.COLUMN_INVENTORY_QUANTITY, mQuantity);
+        values.put(InventoryContract.InventoryEntry.COLUMN_INVENTORY_QUANTITY, quantityString);
 
         int price = 0;
         if (!TextUtils.isEmpty(priceString)) {
@@ -261,23 +236,43 @@ else{
             int quantity = cursor.getInt(quantityColumnIndex);
 
             mProductNameEditText.setText(product);
-            mPriceEditText.setText(Integer.toString(price));
+            mQuantityEditText.setText(Integer.toString(quantity));
+            mPriceEditText.setText(price);
             mSupplierNameEditText.setText(supplier);
             mPhoneEditText.setText(phone);
 
-            switch(quantity){
-                case InventoryEntry.QUANTITY_SMALL:
-                    mQuantitySpinner.setSelection(1);
-                    break;
-                    case InventoryEntry.QUANTITY_LARGE:
-                        mQuantitySpinner.setSelection(10);
-                        break;
-                default:
-                            mQuantitySpinner.setSelection(1);
-                            break;
-            }
         }
-   }
+
+        Button posButton = findViewById(R.id.quantity_pos_button);
+
+        posButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                int quantity = Integer.valueOf(mQuantityEditText.getText().toString());
+
+                if(quantity >= 0){
+                    quantity = quantity +1;
+                }
+                mQuantityEditText.setText(Integer.toString(quantity));
+            }
+        });
+
+        Button negButton = findViewById(R.id.quantity_neg_button);
+
+        negButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v){
+                int quantity = Integer.valueOf(mQuantityEditText.getText().toString());
+
+                if(quantity >= 1){
+                    quantity = quantity - 1;
+                }
+                mQuantityEditText.setText(Integer.toString(quantity));
+            }
+        });
+        }
+
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
@@ -285,7 +280,7 @@ else{
         mPriceEditText.setText("");
         mPhoneEditText.setText("");
         mSupplierNameEditText.setText("");
-        mQuantitySpinner.setSelection(1);
+        mQuantityEditText.setText("");
 
     }
 

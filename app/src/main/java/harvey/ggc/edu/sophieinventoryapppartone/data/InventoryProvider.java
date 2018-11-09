@@ -180,7 +180,7 @@ public class InventoryProvider extends ContentProvider {
 
         if (values.containsKey(InventoryContract.InventoryEntry.COLUMN_INVENTORY_QUANTITY)) {
             Integer quantity = values.getAsInteger(InventoryContract.InventoryEntry.COLUMN_INVENTORY_QUANTITY);
-            if (quantity == null || !InventoryContract.InventoryEntry.isValidQuantity(quantity)) {
+            if (quantity != null && quantity < 0) {
                 throw new IllegalArgumentException("Inventory requires valid quantity!");
             }
         }

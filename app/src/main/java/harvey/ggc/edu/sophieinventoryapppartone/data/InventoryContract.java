@@ -33,15 +33,3 @@ public final class InventoryContract {
     }
 }
 
-        /*public static final int QUANTITY_SMALL = 1;
-        public static final int QUANTITY_MEDIUM = 5;
-        public static final int QUANTITY_LARGE = 10;
-
-        public static boolean isValidQuantity(int quantity){
-            if(quantity == QUANTITY_SMALL || quantity == QUANTITY_MEDIUM || quantity == QUANTITY_LARGE){
-                return true;
-            }
-            return false;
-        }
-    }*/
-

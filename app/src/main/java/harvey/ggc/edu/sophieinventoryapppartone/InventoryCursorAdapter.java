@@ -1,8 +1,10 @@
 package harvey.ggc.edu.sophieinventoryapppartone;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,8 +34,8 @@ public class InventoryCursorAdapter extends CursorAdapter {
         TextView productTextView = (TextView) view.findViewById(R.id.product);
         TextView priceTextView = (TextView) view.findViewById(R.id.price);
         final TextView quantityTextView = (TextView) view.findViewById(R.id.quantity);
-        TextView summaryTextView = (TextView) view.findViewById(R.id.summary);
-        Button saleButton = view.findViewById(R.id.sale_button);
+        TextView summaryTextView = (TextView) view.findViewById(R.id.summary_textView);
+        //Button saleButton = view.findViewById(R.id.saleButton);
 
         int productColumnIndex = cursor.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_INVENTORY_PRODUCT_NAME);
         int priceColumnIndex = cursor.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_INVENTORY_PRICE);
@@ -51,16 +53,21 @@ public class InventoryCursorAdapter extends CursorAdapter {
         summaryTextView.setText(String.valueOf(price));
         quantityTextView.setText(Integer.toString(quantity));
 
+        final Button saleButton = view.findViewById(R.id.saleButton);
+        final int currentId = cursor.getInt(cursor.getColumnIndex(InventoryContract.InventoryEntry._ID));
+        final Uri contentUri = Uri.withAppendedPath(InventoryContract.InventoryEntry.CONTENT_URI, Integer.toString(currentId));
+
         saleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int quantity = Integer.valueOf(quantityTextView.getText().toString()) {
+                int quantity = Integer.valueOf(quantityTextView.getText().toString()); {
 
                     if (quantity > 0) {
                         quantity = quantity - 1;
                     } else {
                         Toast.makeText(context, "Click to add product to inventory", Toast.LENGTH_SHORT).show();
 
+                       // Uri currentInventoryUri = ContentUris.withAppendedId(InventoryContract.InventoryEntry.CONTENT_URI, Integer.toString(currentId));
                         ContentValues values = new ContentValues();
                         values.put(InventoryContract.InventoryEntry.COLUMN_INVENTORY_QUANTITY, quantity);
 
@@ -71,13 +78,6 @@ public class InventoryCursorAdapter extends CursorAdapter {
         });
     }
 }
-
-
-
-
-
-
-
 
 
 

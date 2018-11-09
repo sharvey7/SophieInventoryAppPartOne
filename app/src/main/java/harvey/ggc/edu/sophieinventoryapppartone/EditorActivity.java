@@ -271,6 +271,18 @@ else{
                 mQuantityEditText.setText(Integer.toString(quantity));
             }
         });
+
+        Button salesButton = findViedById(R.id.saleButton);
+        numText = findViewById(R.id.edit_phone);
+        salesButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                sNumber = numText.getText().toString();
+                Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                callIntent.setData(Uri.parse("tel: " + sNumber));
+                startActivity(callIntent);
+            }
+        });
         }
 
 

@@ -8,9 +8,9 @@ public final class InventoryContract {
 
     private InventoryContract() {
     }
-    public static final String CONTENT_AUTHORITY = "com.example.android.pets";
+    public static final String CONTENT_AUTHORITY = "com.example.android.inventory";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
-    public static final String PATH_INVENTORY = "pets";
+    public static final String PATH_INVENTORY = "inventory";
 
 
     public static abstract class InventoryEntry implements BaseColumns {

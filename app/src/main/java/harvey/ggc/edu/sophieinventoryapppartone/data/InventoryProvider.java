@@ -18,7 +18,7 @@ public class InventoryProvider extends ContentProvider {
 
     static {
         sUriMatcher.addURI(InventoryContract.CONTENT_AUTHORITY, InventoryContract.PATH_INVENTORY, INVENTORY);
-        sUriMatcher.addURI(InventoryContract.CONTENT_AUTHORITY, InventoryContract.PATH_INVENTORY + "/n", INVENTORY_ID);
+        sUriMatcher.addURI(InventoryContract.CONTENT_AUTHORITY, InventoryContract.PATH_INVENTORY + "/#", INVENTORY_ID);
 
 
     }
@@ -68,7 +68,7 @@ public class InventoryProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Cannot query unknown URI" + uri);
         }
-
+        cursor.setNotificationUri(getContext().getContentResolver(),uri);
         return cursor;
     }
 
@@ -123,25 +123,34 @@ public class InventoryProvider extends ContentProvider {
             Log.e(LOG_TAG, "Failed to insert row for" + uri);
             return null;
         }
+        getContext().getContentResolver().notifyChange(uri, null);
         return ContentUris.withAppendedId(uri, id);
     }
 
     @Override
     public int delete (Uri uri, String selection, String[]selectionArgs){
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
+        int rowsDeleted;
+
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case INVENTORY:
-                return database.delete(InventoryContract.InventoryEntry.TABLE_NAME, selection, selectionArgs);
+                rowsDeleted = database.delete(InventoryContract.InventoryEntry.TABLE_NAME, selection, selectionArgs);
+                break;
             case INVENTORY_ID:
-                selection = InventoryContract.InventoryEntry._ID + "+?";
+                selection = InventoryContract.InventoryEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                return database.delete(InventoryContract.InventoryEntry.TABLE_NAME, selection, selectionArgs);
+                rowsDeleted = database.delete(InventoryContract.InventoryEntry.TABLE_NAME, selection, selectionArgs);
+              break;
             default:
                 throw new IllegalArgumentException("Deletion is not supported for " + uri);
-
         }
-    }
+                if(rowsDeleted != 0){
+                    getContext().getContentResolver().notifyChange(uri, null);
+                }
+                return rowsDeleted;
+        }
+
     /**
      * Updates the data at the given selection and selection arguments, with the new ContentValues.
      */
@@ -182,11 +191,19 @@ public class InventoryProvider extends ContentProvider {
             }
         }
 
-
         if (values.size() == 0) {
             return 0;
         }
+
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
-        return database.update(InventoryContract.InventoryEntry.TABLE_NAME, values, selection, selectionArgs);
+
+      int rowsUpdated = database.update(InventoryContract.InventoryEntry.TABLE_NAME, values, selection, selectionArgs);
+
+      if(rowsUpdated != 0) {
+          getContext().getContentResolver().notifyChange(uri, null);
+      }
+      return rowsUpdated;
+
+      }
     }
-}
+

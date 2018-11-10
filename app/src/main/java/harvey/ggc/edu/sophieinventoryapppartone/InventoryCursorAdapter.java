@@ -31,10 +31,10 @@ public class InventoryCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, final Context context, Cursor cursor) {
         //the views in the list layout
-        TextView productTextView = (TextView) view.findViewById(R.id.product);
-        TextView priceTextView = (TextView) view.findViewById(R.id.price);
-        final TextView quantityTextView = (TextView) view.findViewById(R.id.quantity);
-        TextView summaryTextView = (TextView) view.findViewById(R.id.summary_textView);
+        TextView productTextView =  view.findViewById(R.id.product);
+        TextView priceTextView =  view.findViewById(R.id.price);
+        final TextView quantityTextView =  view.findViewById(R.id.quantity_textView);
+        TextView summaryTextView =  view.findViewById(R.id.summary_textView);
         //Button saleButton = view.findViewById(R.id.saleButton);
 
         int productColumnIndex = cursor.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_INVENTORY_PRODUCT_NAME);

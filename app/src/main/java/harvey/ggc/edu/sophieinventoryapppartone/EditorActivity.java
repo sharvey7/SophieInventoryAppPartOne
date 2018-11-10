@@ -40,8 +40,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private EditText mSupplierNameEditText;
     private EditText mPhoneEditText;
     private EditText mQuantityEditText;
+    private Button mSalesButton;
 
-    //private int mQuantity = InventoryEntry.QUANTITY_SMALL;
+
     String sNumber;
     EditText numText;
     private boolean mInventoryHasChanged = false;
@@ -62,6 +63,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         Intent intent = getIntent();
         mCurrentInventoryUri = intent.getData();
 
+
         if(mCurrentInventoryUri == null) {
             setTitle("Add a product! ");
             invalidateOptionsMenu();
@@ -71,11 +73,12 @@ else{
 
             getLoaderManager().initLoader(EXISTING_INVENTORY_LOADER,null, this);
         }
-        mProductNameEditText = (EditText) findViewById(R.id.edit_product_name);
-        mPriceEditText = (EditText) findViewById(R.id.edit_product_price);
-        mPhoneEditText = (EditText) findViewById(R.id.edit_phone);
-        mSupplierNameEditText = (EditText) findViewById(R.id.edit_supplier);
-        mQuantityEditText= (EditText) findViewById(R.id.edit_quantity);
+        mProductNameEditText = findViewById(R.id.edit_product_name);
+        mPriceEditText =  findViewById(R.id.edit_product_price);
+        mPhoneEditText = findViewById(R.id.edit_phone);
+        mSupplierNameEditText = findViewById(R.id.edit_supplier);
+        mQuantityEditText=  findViewById(R.id.edit_quantity);
+        mSalesButton = findViewById(R.id.saleButton);
 
         mProductNameEditText.setOnTouchListener(mTouchListener);
         mPriceEditText.setOnTouchListener(mTouchListener);
@@ -83,7 +86,18 @@ else{
         mSupplierNameEditText.setOnTouchListener(mTouchListener);
         mQuantityEditText.setOnTouchListener(mTouchListener);
 
+
+        mSalesButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                sNumber = numText.getText().toString();
+                Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                callIntent.setData(Uri.parse("tel: " + sNumber));
+                startActivity(callIntent);
+            }
+        });
     }
+
 
     private void saveInventory() {
         String productString = mProductNameEditText.getText().toString().trim();
@@ -269,18 +283,6 @@ else{
                     quantity = quantity - 1;
                 }
                 mQuantityEditText.setText(Integer.toString(quantity));
-            }
-        });
-
-        Button salesButton = findViedById(R.id.saleButton);
-        numText = findViewById(R.id.edit_phone);
-        salesButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                sNumber = numText.getText().toString();
-                Intent callIntent = new Intent(Intent.ACTION_DIAL);
-                callIntent.setData(Uri.parse("tel: " + sNumber));
-                startActivity(callIntent);
             }
         });
         }

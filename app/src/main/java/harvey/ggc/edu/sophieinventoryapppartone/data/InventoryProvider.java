@@ -20,7 +20,6 @@ public class InventoryProvider extends ContentProvider {
         sUriMatcher.addURI(InventoryContract.CONTENT_AUTHORITY, InventoryContract.PATH_INVENTORY, INVENTORY);
         sUriMatcher.addURI(InventoryContract.CONTENT_AUTHORITY, InventoryContract.PATH_INVENTORY + "/#", INVENTORY_ID);
 
-
     }
 
     private InventoryDbHelper mDbHelper;
@@ -85,8 +84,6 @@ public class InventoryProvider extends ContentProvider {
         }
 
     }
-
-
     /**
      * Insert new data into the provider with the given ContentValues.
      */
@@ -206,4 +203,3 @@ public class InventoryProvider extends ContentProvider {
 
       }
     }
-

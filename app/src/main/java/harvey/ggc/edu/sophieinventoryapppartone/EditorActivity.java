@@ -42,9 +42,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private EditText mQuantityEditText;
     private Button mSalesButton;
 
-
     String sNumber;
-    EditText numText;
     private boolean mInventoryHasChanged = false;
 
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
@@ -62,7 +60,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         Intent intent = getIntent();
         mCurrentInventoryUri = intent.getData();
-
 
         if (mCurrentInventoryUri == null) {
             setTitle("Add a product! ");
@@ -132,7 +129,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         });
     }
 
-
     private void saveInventory() {
         String productString = mProductNameEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
@@ -140,15 +136,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String phoneString = mPhoneEditText.getText().toString().trim();
         String quantityString = mQuantityEditText.getText().toString().trim();
 
-        if (TextUtils.isEmpty(productString)
-                || TextUtils.isEmpty(priceString)
-                || TextUtils.isEmpty(supplierString)
-                || TextUtils.isEmpty(phoneString)
-                || TextUtils.isEmpty(phoneString)) {
-            Toast.makeText(this, getString(R.string.editor_insert_inventory_success),
-                    Toast.LENGTH_LONG).show();
-            return;
-        }
         ContentValues values = new ContentValues();
         values.put(InventoryContract.InventoryEntry.COLUMN_INVENTORY_PRODUCT_NAME, productString);
         values.put(InventoryContract.InventoryEntry.COLUMN_INVENTORY_SUPPLIER_PHONE, phoneString);
@@ -204,9 +191,24 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_saved:
+                String productString = mProductNameEditText.getText().toString().trim();
+                String priceString = mPriceEditText.getText().toString().trim();
+                String supplierString = mSupplierNameEditText.getText().toString().trim();
+                String phoneString = mPhoneEditText.getText().toString().trim();
+                String quantityString = mQuantityEditText.getText().toString().trim();
+
+                if (TextUtils.isEmpty(productString)
+                        || TextUtils.isEmpty(priceString)
+                        || TextUtils.isEmpty(supplierString)
+                        || TextUtils.isEmpty(phoneString)
+                        || TextUtils.isEmpty(phoneString)) {
+                    Toast.makeText(this, getString(R.string.editor_insert_inventory_success),
+                            Toast.LENGTH_LONG).show();
+                    return true;
+                }
+
                 saveInventory();
-                finish(); //make sure to close this activity only when product is successfully saved so users
-                //won't to retype all previous data just because some missing fields.
+                finish();
                 return true;
 
             case R.id.action_deleted:
@@ -245,7 +247,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                         finish();
                     }
                 };
-
         showUnsavedChangeDialog(discardButtonClickListener);
     }
 

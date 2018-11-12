@@ -101,7 +101,7 @@
             android:layout_height="wrap_content"
             android:inputType="text"
             android:padding="@dimen/activity_margin" />
-        
+
             <EditText
                 android:id="@+id/edit_phone"
                 android:layout_width="wrap_content"

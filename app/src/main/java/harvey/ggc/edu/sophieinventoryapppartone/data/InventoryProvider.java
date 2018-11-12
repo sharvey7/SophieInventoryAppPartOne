@@ -97,8 +97,8 @@ public class InventoryProvider extends ContentProvider {
         Integer price = values.getAsInteger(InventoryContract.InventoryEntry.COLUMN_INVENTORY_PRICE);
         if (price != null && price < 0) {
             throw new IllegalArgumentException("Inventory requires a price!");
-
         }
+
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
         long id = database.insert(InventoryContract.InventoryEntry.TABLE_NAME, null, values);

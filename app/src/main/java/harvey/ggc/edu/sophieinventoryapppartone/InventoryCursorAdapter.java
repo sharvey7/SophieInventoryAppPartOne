@@ -30,11 +30,10 @@ public class InventoryCursorAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, final Context context, Cursor cursor) {
-        //the views in the list layout
+
         TextView productTextView = view.findViewById(R.id.product);
         TextView priceTextView = view.findViewById(R.id.price);
         final TextView quantityTextView = view.findViewById(R.id.quantity_textView);
-        TextView summaryTextView = view.findViewById(R.id.summary_textView);
 
         int productColumnIndex = cursor.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_INVENTORY_PRODUCT_NAME);
         int priceColumnIndex = cursor.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_INVENTORY_PRICE);
@@ -48,7 +47,7 @@ public class InventoryCursorAdapter extends CursorAdapter {
             price = "Unknown price!";
         }
         productTextView.setText(String.valueOf(productName));
-        summaryTextView.setText(String.valueOf(price));
+        priceTextView.setText(String.valueOf(price));
         quantityTextView.setText(Integer.toString(quantity));
 
         final Button saleButton = view.findViewById(R.id.saleButton);
@@ -59,20 +58,17 @@ public class InventoryCursorAdapter extends CursorAdapter {
             @Override
             public void onClick(View v) {
                 int quantity = Integer.valueOf(quantityTextView.getText().toString());
-                {
 
                     if (quantity > 0) {
                         quantity = quantity - 1;
-                    } else {
-                        Toast.makeText(context, "Click to add product to inventory", Toast.LENGTH_SHORT).show();
 
-                        // Uri currentInventoryUri = ContentUris.withAppendedId(InventoryContract.InventoryEntry.CONTENT_URI, Integer.toString(currentId));
+                        Uri currentInventoryUri = ContentUris.withAppendedId(InventoryContract.InventoryEntry.CONTENT_URI, currentId);
                         ContentValues values = new ContentValues();
                         values.put(InventoryContract.InventoryEntry.COLUMN_INVENTORY_QUANTITY, quantity);
 
                         context.getContentResolver().update(contentUri, values, null, null);
                     }
-                }
+
             }
         });
     }

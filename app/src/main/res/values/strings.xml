@@ -19,18 +19,19 @@
     <string name="editor_title_edit">Edit Product Here</string>
     <string name="editor_activity_title_new_product">Add inventory here</string>
     <string name="editor_insert_inventory_fail">Inventory has not been added</string>
-    <string name="editor_insert_inventory_success">Inventory has been added successfully!</string>
+    <string name="editor_insert_inventory_success">Inventory has been entered!</string>
     <string name="empty_view_title_text">It\'s a bit lonely here.</string>
     <string name="empty_view_subtitle_text">Get started by adding a product!</string>
     <string name="editor_update_pet_fail">Updated failed</string>
     <string name="editor_update_pet_success">Update complete</string>
     <string name="unsaved_changes_dialog_mag">Not saved</string>
-    <string name="discard">Getting rid of it</string>
+    <string name="discard">Discard</string>
     <string name="keep_editing">Keep Editing</string>
     <string name="delete_dialog_msg">Has been deleted</string>
     <string name="delete">Deleted</string>
     <string name="cancel">Cancelled</string>
     <string name="editor_delete_inventory_fail">Inventory failed to update</string>
     <string name="editor_delete_pet_success">Inventory successfully deleted</string>
+    <string name="buttonFloat">Click Here!</string>
 
 </resources>

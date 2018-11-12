@@ -63,6 +63,7 @@
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:inputType="number"
                 android:id="@+id/edit_quantity"/>
 
             <Button
@@ -79,10 +80,7 @@
                 android:text="-"
                 android:focusable="false"/>
 
-
         </LinearLayout>
-
-
     </LinearLayout>
 
     <LinearLayout
@@ -103,15 +101,13 @@
             android:layout_height="wrap_content"
             android:inputType="text"
             android:padding="@dimen/activity_margin" />
-
-
-
+        
             <EditText
                 android:id="@+id/edit_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="@string/hint_phone"
-                android:inputType="text"
+                android:inputType="number"
                 android:paddingBottom="@dimen/fab_margin" />
 
             <TextView
@@ -121,13 +117,13 @@
                 android:paddingBottom="@dimen/fab_margin"
                 android:text="@string/dial" />
 
-            <Button
-                android:id="@+id/saleButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-               android:layout_alignParentBottom="true"
-                android:focusable="false"
-                android:text="Order" />
+        <Button
+            android:id="@+id/saleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:focusable="false"
+            android:text="Call" />
 
     </LinearLayout>
 

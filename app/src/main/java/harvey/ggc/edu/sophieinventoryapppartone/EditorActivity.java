@@ -33,7 +33,7 @@ import harvey.ggc.edu.sophieinventoryapppartone.data.InventoryDbHelper;
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int EXISTING_INVENTORY_LOADER = 0;
-    private Uri  mCurrentInventoryUri;
+    private Uri mCurrentInventoryUri;
 
     private EditText mProductNameEditText;
     private EditText mPriceEditText;
@@ -47,9 +47,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     EditText numText;
     private boolean mInventoryHasChanged = false;
 
-    private View.OnTouchListener mTouchListener = new View.OnTouchListener(){
+    private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
-        public boolean onTouch(View view, MotionEvent motionEvent){
+        public boolean onTouch(View view, MotionEvent motionEvent) {
             mInventoryHasChanged = true;
             return false;
         }
@@ -64,20 +64,19 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mCurrentInventoryUri = intent.getData();
 
 
-        if(mCurrentInventoryUri == null) {
+        if (mCurrentInventoryUri == null) {
             setTitle("Add a product! ");
             invalidateOptionsMenu();
-        }
-else{
+        } else {
             setTitle(getString(R.string.editor_title_edit));
 
-            getLoaderManager().initLoader(EXISTING_INVENTORY_LOADER,null, this);
+            getLoaderManager().initLoader(EXISTING_INVENTORY_LOADER, null, this);
         }
         mProductNameEditText = findViewById(R.id.edit_product_name);
-        mPriceEditText =  findViewById(R.id.edit_product_price);
+        mPriceEditText = findViewById(R.id.edit_product_price);
         mPhoneEditText = findViewById(R.id.edit_phone);
         mSupplierNameEditText = findViewById(R.id.edit_supplier);
-        mQuantityEditText=  findViewById(R.id.edit_quantity);
+        mQuantityEditText = findViewById(R.id.edit_quantity);
         mSalesButton = findViewById(R.id.saleButton);
 
         mProductNameEditText.setOnTouchListener(mTouchListener);
@@ -86,14 +85,49 @@ else{
         mSupplierNameEditText.setOnTouchListener(mTouchListener);
         mQuantityEditText.setOnTouchListener(mTouchListener);
 
-
-        mSalesButton.setOnClickListener(new View.OnClickListener(){
+        mSalesButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
-                sNumber = numText.getText().toString();
+            public void onClick(View v) {
+                sNumber = mPhoneEditText.getText().toString();
                 Intent callIntent = new Intent(Intent.ACTION_DIAL);
                 callIntent.setData(Uri.parse("tel: " + sNumber));
                 startActivity(callIntent);
+            }
+        });
+        Button posButton = findViewById(R.id.quantity_pos_button);
+
+        posButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mQuantityEditText.getText().toString().isEmpty()) {
+                    mQuantityEditText.setText("0");
+                }
+
+                int quantity = Integer.valueOf(mQuantityEditText.getText().toString());
+
+                if (quantity >= 0) {
+                    quantity = quantity + 1;
+                }
+                mQuantityEditText.setText(Integer.toString(quantity));
+            }
+        });
+
+        Button negButton = findViewById(R.id.quantity_neg_button);
+
+        negButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if (mQuantityEditText.getText().toString().isEmpty()) {
+                    mQuantityEditText.setText("0");
+                }
+                int quantity = Integer.valueOf(mQuantityEditText.getText().toString());
+
+                if (quantity >= 1) {
+                    quantity = quantity - 1;
+                }
+                mQuantityEditText.setText(Integer.toString(quantity));
             }
         });
     }
@@ -106,12 +140,11 @@ else{
         String phoneString = mPhoneEditText.getText().toString().trim();
         String quantityString = mQuantityEditText.getText().toString().trim();
 
-      if(TextUtils.isEmpty(productString)
-          || TextUtils.isEmpty(priceString)
+        if (TextUtils.isEmpty(productString)
+                || TextUtils.isEmpty(priceString)
                 || TextUtils.isEmpty(supplierString)
                 || TextUtils.isEmpty(phoneString)
-                || TextUtils.isEmpty(phoneString))
-        {
+                || TextUtils.isEmpty(phoneString)) {
             Toast.makeText(this, getString(R.string.editor_insert_inventory_success),
                     Toast.LENGTH_LONG).show();
             return;
@@ -153,9 +186,9 @@ else{
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu){
+    public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        if(mCurrentInventoryUri == null){
+        if (mCurrentInventoryUri == null) {
             MenuItem menuItem = menu.findItem(R.id.action_deleted);
             menuItem.setVisible(false);
         }
@@ -172,7 +205,8 @@ else{
         switch (item.getItemId()) {
             case R.id.action_saved:
                 saveInventory();
-                finish();
+                finish(); //make sure to close this activity only when product is successfully saved so users
+                //won't to retype all previous data just because some missing fields.
                 return true;
 
             case R.id.action_deleted:
@@ -180,17 +214,17 @@ else{
                 return true;
 
             case android.R.id.home:
-                if(!mInventoryHasChanged) {
+                if (!mInventoryHasChanged) {
                     NavUtils.navigateUpFromSameTask(EditorActivity.this);
                     return true;
                 }
 
-                    DialogInterface.OnClickListener discardButtonClickListener = new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            NavUtils.navigateUpFromSameTask(EditorActivity.this);
-                        }
-                    };
+                DialogInterface.OnClickListener discardButtonClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        NavUtils.navigateUpFromSameTask(EditorActivity.this);
+                    }
+                };
                 showUnsavedChangeDialog(discardButtonClickListener);
                 return true;
         }
@@ -198,8 +232,8 @@ else{
     }
 
     @Override
-    public void onBackPressed(){
-        if(!mInventoryHasChanged){
+    public void onBackPressed() {
+        if (!mInventoryHasChanged) {
             super.onBackPressed();
             return;
         }
@@ -215,7 +249,7 @@ else{
         showUnsavedChangeDialog(discardButtonClickListener);
     }
 
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle){
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         String[] projection = {
                 InventoryEntry._ID,
                 InventoryEntry.COLUMN_INVENTORY_PRODUCT_NAME,
@@ -230,13 +264,13 @@ else{
                 null,
                 null,
                 null);
-        }
+    }
 
-        public void onLoadFinished(Loader<Cursor> loader, Cursor cursor){
-        if(cursor == null || cursor.getCount() < 1){
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        if (cursor == null || cursor.getCount() < 1) {
             return;
         }
-        if(cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             int productColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_INVENTORY_PRODUCT_NAME);
             int priceColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_INVENTORY_PRICE);
             int supplierColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_INVENTORY_SUPPLIER_NAME);
@@ -251,42 +285,11 @@ else{
 
             mProductNameEditText.setText(product);
             mQuantityEditText.setText(Integer.toString(quantity));
-            mPriceEditText.setText(price);
+            mPriceEditText.setText(String.valueOf(price));
             mSupplierNameEditText.setText(supplier);
             mPhoneEditText.setText(phone);
-
         }
-
-        Button posButton = findViewById(R.id.quantity_pos_button);
-
-        posButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                int quantity = Integer.valueOf(mQuantityEditText.getText().toString());
-
-                if(quantity >= 0){
-                    quantity = quantity +1;
-                }
-                mQuantityEditText.setText(Integer.toString(quantity));
-            }
-        });
-
-        Button negButton = findViewById(R.id.quantity_neg_button);
-
-        negButton.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v){
-                int quantity = Integer.valueOf(mQuantityEditText.getText().toString());
-
-                if(quantity >= 1){
-                    quantity = quantity - 1;
-                }
-                mQuantityEditText.setText(Integer.toString(quantity));
-            }
-        });
-        }
-
+    }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
@@ -295,28 +298,26 @@ else{
         mPhoneEditText.setText("");
         mSupplierNameEditText.setText("");
         mQuantityEditText.setText("");
-
     }
 
-    private void showUnsavedChangeDialog( DialogInterface.OnClickListener discardButtonClickListener)
-        {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.unsaved_changes_dialog_mag);
-            builder.setPositiveButton(R.string.discard, discardButtonClickListener);
-            builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-                    if (dialog != null) {
-                        dialog.dismiss();
-                    }
+    private void showUnsavedChangeDialog(DialogInterface.OnClickListener discardButtonClickListener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.unsaved_changes_dialog_mag);
+        builder.setPositiveButton(R.string.discard, discardButtonClickListener);
+        builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                if (dialog != null) {
+                    dialog.dismiss();
                 }
-            });
+            }
+        });
 
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
-        }
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
 
-        private void showDeleteConfirmationDialog(){
+    private void showDeleteConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.delete_dialog_msg);
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
@@ -326,9 +327,9 @@ else{
             }
         });
 
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener(){
-            public void onClick(DialogInterface dialog, int id){
-                if(dialog != null){
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                if (dialog != null) {
                     dialog.dismiss();
                 }
             }
@@ -337,20 +338,20 @@ else{
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-       private void deleteInventory(){
-        if(mCurrentInventoryUri != null){
+
+    private void deleteInventory() {
+        if (mCurrentInventoryUri != null) {
 
             int rowsDeleted = getContentResolver().delete(mCurrentInventoryUri, null, null);
 
-            if(rowsDeleted == 0){
+            if (rowsDeleted == 0) {
                 Toast.makeText(this, getString(R.string.editor_delete_inventory_fail),
                         Toast.LENGTH_SHORT).show();
-            }else{
+            } else {
                 Toast.makeText(this, getString(R.string.editor_delete_pet_success),
                         Toast.LENGTH_SHORT).show();
             }
         }
         finish();
-       }
-
+    }
 }

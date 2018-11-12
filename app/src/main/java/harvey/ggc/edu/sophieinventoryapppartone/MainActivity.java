@@ -28,7 +28,6 @@ import harvey.ggc.edu.sophieinventoryapppartone.data.InventoryDbHelper;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-
     private static final int INVENTORY_LOADER = 0;
     InventoryCursorAdapter mCursorAdapter;
 
@@ -68,9 +67,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         getLoaderManager().initLoader(INVENTORY_LOADER, null, this);
     }
 
-
     private void insertInventory() {
-        //SQLiteDatabase db = mDbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
 
         values.put(InventoryEntry.COLUMN_INVENTORY_PRODUCT_NAME, "iPAD");
@@ -80,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         values.put(InventoryEntry.COLUMN_INVENTORY_SUPPLIER_PHONE, "6784091111");
 
         Uri newUri = getContentResolver().insert(InventoryEntry.CONTENT_URI, values);
-        // long newRowId = db.insert(InventoryEntry.TABLE_NAME, null, values);
     }
 
 
@@ -119,6 +115,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         String[] projection = {
                 InventoryEntry._ID,
                 InventoryEntry.COLUMN_INVENTORY_PRODUCT_NAME,
+                InventoryEntry.COLUMN_INVENTORY_QUANTITY,
+                InventoryEntry.COLUMN_INVENTORY_SUPPLIER_PHONE,
+                InventoryEntry.COLUMN_INVENTORY_SUPPLIER_NAME,
                 InventoryEntry.COLUMN_INVENTORY_PRICE};
 
         return new CursorLoader(this,
@@ -132,12 +131,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mCursorAdapter.swapCursor(data);
-
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mCursorAdapter.swapCursor(null);
     }
-
 }

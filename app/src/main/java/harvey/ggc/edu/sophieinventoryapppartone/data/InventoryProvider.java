@@ -19,30 +19,18 @@ public class InventoryProvider extends ContentProvider {
     static {
         sUriMatcher.addURI(InventoryContract.CONTENT_AUTHORITY, InventoryContract.PATH_INVENTORY, INVENTORY);
         sUriMatcher.addURI(InventoryContract.CONTENT_AUTHORITY, InventoryContract.PATH_INVENTORY + "/#", INVENTORY_ID);
-
     }
 
     private InventoryDbHelper mDbHelper;
-    /**
-     * Tag for the log messages
-     */
+
     public static final String LOG_TAG = InventoryProvider.class.getSimpleName();
 
-    /**
-     * Initialize the provider and the database helper object.
-     */
     @Override
     public boolean onCreate() {
-        // TODO: Create and initialize a InvDbHelper object to gain access to the pets database.
-        // Make sure the variable is a global variable, so it can be referenced from other
-        // ContentProvider methods.
         mDbHelper = new InventoryDbHelper(getContext());
         return true;
     }
 
-    /**
-     * Perform the query for the given URI. Use the given projection, selection, selection arguments, and sort order.
-     */
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
                         String sortOrder) {
@@ -67,12 +55,12 @@ public class InventoryProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Cannot query unknown URI" + uri);
         }
-        cursor.setNotificationUri(getContext().getContentResolver(),uri);
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
     }
 
     @Override
-    public String getType (Uri uri){
+    public String getType(Uri uri) {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case INVENTORY:
@@ -84,9 +72,7 @@ public class InventoryProvider extends ContentProvider {
         }
 
     }
-    /**
-     * Insert new data into the provider with the given ContentValues.
-     */
+
     @Override
     public Uri insert(Uri uri, ContentValues contentValues) {
         final int match = sUriMatcher.match(uri);
@@ -125,7 +111,7 @@ public class InventoryProvider extends ContentProvider {
     }
 
     @Override
-    public int delete (Uri uri, String selection, String[]selectionArgs){
+    public int delete(Uri uri, String selection, String[] selectionArgs) {
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
         int rowsDeleted;
 
@@ -138,19 +124,16 @@ public class InventoryProvider extends ContentProvider {
                 selection = InventoryContract.InventoryEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 rowsDeleted = database.delete(InventoryContract.InventoryEntry.TABLE_NAME, selection, selectionArgs);
-              break;
+                break;
             default:
                 throw new IllegalArgumentException("Deletion is not supported for " + uri);
         }
-                if(rowsDeleted != 0){
-                    getContext().getContentResolver().notifyChange(uri, null);
-                }
-                return rowsDeleted;
+        if (rowsDeleted != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
         }
+        return rowsDeleted;
+    }
 
-    /**
-     * Updates the data at the given selection and selection arguments, with the new ContentValues.
-     */
     @Override
     public int update(Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {
 
@@ -194,12 +177,11 @@ public class InventoryProvider extends ContentProvider {
 
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
-      int rowsUpdated = database.update(InventoryContract.InventoryEntry.TABLE_NAME, values, selection, selectionArgs);
+        int rowsUpdated = database.update(InventoryContract.InventoryEntry.TABLE_NAME, values, selection, selectionArgs);
 
-      if(rowsUpdated != 0) {
-          getContext().getContentResolver().notifyChange(uri, null);
-      }
-      return rowsUpdated;
-
-      }
+        if (rowsUpdated != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return rowsUpdated;
     }
+}

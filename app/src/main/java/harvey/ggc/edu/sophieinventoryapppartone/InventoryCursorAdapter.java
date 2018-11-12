@@ -31,16 +31,14 @@ public class InventoryCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, final Context context, Cursor cursor) {
         //the views in the list layout
-        TextView productTextView =  view.findViewById(R.id.product);
-        TextView priceTextView =  view.findViewById(R.id.price);
-        final TextView quantityTextView =  view.findViewById(R.id.quantity_textView);
-        TextView summaryTextView =  view.findViewById(R.id.summary_textView);
-        //Button saleButton = view.findViewById(R.id.saleButton);
+        TextView productTextView = view.findViewById(R.id.product);
+        TextView priceTextView = view.findViewById(R.id.price);
+        final TextView quantityTextView = view.findViewById(R.id.quantity_textView);
+        TextView summaryTextView = view.findViewById(R.id.summary_textView);
 
         int productColumnIndex = cursor.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_INVENTORY_PRODUCT_NAME);
         int priceColumnIndex = cursor.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_INVENTORY_PRICE);
         int quantityColumnIndex = cursor.getColumnIndex(InventoryContract.InventoryEntry.COLUMN_INVENTORY_QUANTITY);
-
 
         String productName = cursor.getString(productColumnIndex);
         String price = cursor.getString(priceColumnIndex);
@@ -60,14 +58,15 @@ public class InventoryCursorAdapter extends CursorAdapter {
         saleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int quantity = Integer.valueOf(quantityTextView.getText().toString()); {
+                int quantity = Integer.valueOf(quantityTextView.getText().toString());
+                {
 
                     if (quantity > 0) {
                         quantity = quantity - 1;
                     } else {
                         Toast.makeText(context, "Click to add product to inventory", Toast.LENGTH_SHORT).show();
 
-                       // Uri currentInventoryUri = ContentUris.withAppendedId(InventoryContract.InventoryEntry.CONTENT_URI, Integer.toString(currentId));
+                        // Uri currentInventoryUri = ContentUris.withAppendedId(InventoryContract.InventoryEntry.CONTENT_URI, Integer.toString(currentId));
                         ContentValues values = new ContentValues();
                         values.put(InventoryContract.InventoryEntry.COLUMN_INVENTORY_QUANTITY, quantity);
 

@@ -75,10 +75,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         values.put(InventoryEntry.COLUMN_INVENTORY_QUANTITY, 1);
         values.put(InventoryEntry.COLUMN_INVENTORY_SUPPLIER_NAME, "Apple");
         values.put(InventoryEntry.COLUMN_INVENTORY_SUPPLIER_PHONE, "6784091111");
-
-        Uri newUri = getContentResolver().insert(InventoryEntry.CONTENT_URI, values);
     }
-
 
     private void deleteAllInventory() {
         int rowsDeleted = getContentResolver().delete(InventoryEntry.CONTENT_URI, null, null);

@@ -62,17 +62,12 @@ public class InventoryCursorAdapter extends CursorAdapter {
                     if (quantity > 0) {
                         quantity = quantity - 1;
 
-                        Uri currentInventoryUri = ContentUris.withAppendedId(InventoryContract.InventoryEntry.CONTENT_URI, currentId);
                         ContentValues values = new ContentValues();
                         values.put(InventoryContract.InventoryEntry.COLUMN_INVENTORY_QUANTITY, quantity);
 
                         context.getContentResolver().update(contentUri, values, null, null);
                     }
-
             }
         });
     }
 }
-
-
-

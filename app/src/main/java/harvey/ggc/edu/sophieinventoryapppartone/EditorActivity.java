@@ -195,7 +195,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 String priceString = mPriceEditText.getText().toString().trim();
                 String supplierString = mSupplierNameEditText.getText().toString().trim();
                 String phoneString = mPhoneEditText.getText().toString().trim();
-                String quantityString = mQuantityEditText.getText().toString().trim();
 
                 if (TextUtils.isEmpty(productString)
                         || TextUtils.isEmpty(priceString)

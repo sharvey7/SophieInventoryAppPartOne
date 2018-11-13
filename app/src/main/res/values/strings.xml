@@ -19,7 +19,7 @@
     <string name="editor_title_edit">Edit Product Here</string>
     <string name="editor_activity_title_new_product">Add inventory here</string>
     <string name="editor_insert_inventory_fail">Inventory has not been added</string>
-    <string name="editor_insert_inventory_success">Inventory has been entered!</string>
+    <string name="editor_insert_inventory_success">Make sure you fill in all the boxes!</string>
     <string name="empty_view_title_text">It\'s a bit lonely here.</string>
     <string name="empty_view_subtitle_text">Get started by adding a product!</string>
     <string name="editor_update_pet_fail">Updated failed</string>
